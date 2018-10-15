@@ -34,22 +34,22 @@ namespace WishList.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel vm)
+        public IActionResult Register(RegisterViewModel vm)
         {
             if(ModelState.IsValid == false)
             {
                 return View(vm);
             }
-            var task = await _userManager.CreateAsync(new ApplicationUser
+            var result = _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = vm.Email,
                 Email = vm.Email
             }, 
-            vm.Password);
+            vm.Password).Result;
 
-            if(task.Succeeded == false)
+            if(result.Succeeded == false)
             {
-                foreach (var item in task.Errors)
+                foreach (var item in result.Errors)
                 {
                     ModelState.AddModelError("Password", item.Description);
                 }
